@@ -1,3 +1,0 @@
-
-url:
-https://vim-cat.eng.vmware.com/PA/results/vpxd/9/5/7/0/4/7/2/9/nomachinevpxd/nimbus-test-launcher.txt

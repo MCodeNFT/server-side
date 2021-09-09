@@ -1,3 +1,3 @@
-file_store_path = '/home/worker/logs'
-vnlp_api = 'http://localhost:5000/process'
-model_api = 'http://localhost:5000/process'
+import os
+
+database_url = os.environ.get('DATABASE_URL', 'postgresql://ligulfzhou:POSTGRESzlg153@localhost:5432/mloot')

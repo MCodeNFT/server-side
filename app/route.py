@@ -1,74 +1,22 @@
-import logging
-import urllib.request
-
-from flask import Blueprint, request, jsonify
-from flask import current_app as app
+from flask import Blueprint, jsonify
 from exception import APIParamError
-from model import Log, db
-from utils import get_vnlp_process_lines, match_loop_output_regex, get_pcc_from_model
+from model import MLoot
+from utils import get_image
+
 
 router_bp = Blueprint('router', __name__)
 
 
-@router_bp.route('/', methods=['POST'])
-def analyze():
-    # get param url
-    try:
-        j = request.get_json()
-        url = j.get('url', '')
-        lines = j.get('lines', [])
-        assert url or lines
-    except Exception as e:
-        logging.error(e)
+@router_bp.route('/mloot/<int:_token_id>')
+def nft(_token_id):
+    if _token_id <= 0 or _token_id > 10000:
         raise APIParamError()
 
-    # get lines from url
-    if url and not lines:
-        try:
-            with urllib.request.urlopen(url) as r:
-                lines = r.readlines()
-                lines = [i.decode() for i in lines]
-        except Exception as e:
-            logging.error(f'error {e}, url: {url}')
-            raise
-
-    # strip: \n
-    lines = list(filter(bool, [i.strip() for i in lines]))
-    print(f'origin lines: {lines}')
-
-    # pre process
-    #   todo: replace path, vm_name
-
-    # call vnlp api to
-    processed_log = get_vnlp_process_lines(lines)
-    print(f'processed_log: {processed_log}')
-
-    # post vnlp process
-    #   todo: extract regex
-
-    # if lines are recognized
-    #    fetch loop_output_regex with is_tmp=false
-    loop_logs = Log.query.filter(Log.loop_output_regex != '{}').filter_by(is_temp=False).all()
-    loop_regex = [loop.loop_output_regex for loop in loop_logs]
-    print(f'loop_regex: {loop_regex}')
-    matched = match_loop_output_regex(lines, loop_regex)
-    if matched:
-        pcc = get_pcc_from_model(lines)
-        return jsonify({
-            'pcc': pcc
-        })
-
-    log = {
-        'url': url,
-        'raw_log': lines,
-        'processed_log': processed_log
+    mloot = MLoot.query.filter(MLoot.index==_token_id).scalar()
+    mloot = {
+        'name': mloot.name,
+        'description': mloot.description,
+        'image': get_image(mloot.word_list),
+        'attributes': mloot.attributes,
     }
-    log_model = Log(**log)
-    db.session.add(log_model)
-    db.session.commit()
-
-    # check duplication before create loop project
-
-    return jsonify({
-        'pcc': 'unknown'
-    })
+    return jsonify(mloot)
