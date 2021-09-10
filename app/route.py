@@ -31,6 +31,6 @@ def random3():
     for model in models:
         mloots.append({
             'id': model.index,
-            'attributes': model.word_list
+            'word_list': model.word_list
         })
     return jsonify(mloots)
