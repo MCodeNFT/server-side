@@ -23,10 +23,10 @@ def nft(_token_id):
     return jsonify(mloot)
 
 
-@router_bp.route('/mloot/random3')
-def random3():
-    idx = random.randint(1, 10000 - 2)
-    models = MLoot.query.filter(MLoot.index.in_(tuple([idx, idx+1, idx+2]))).all()
+@router_bp.route('/mloot/random/<int:n>')
+def random3(n):
+    idx = random.randint(1, 10000 - n + 1)
+    models = MLoot.query.filter(MLoot.index.in_(tuple(list(range(idx, idx+n))))).all()
     mloots = []
     for model in models:
         mloots.append({
