@@ -3,8 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class MLoot(db.Model):
-    __tablename__ = 'mloot'
+class MCode(db.Model):
+    __tablename__ = 'mcode'
 
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.Integer)

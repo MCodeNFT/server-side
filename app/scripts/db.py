@@ -6,12 +6,12 @@ from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-db_string = os.environ.get('database_url',  "postgresql://ligulfzhou:POSTGRESzlg153@localhost:5432/mloot")
+db_string = os.environ.get('database_url',  "postgresql://ligulfzhou:POSTGRESzlg153@localhost:5432/mcode")
 base = declarative_base()
 
 
-class MLoot(base):
-    __tablename__ = 'mloot'
+class MCode(base):
+    __tablename__ = 'mcode'
 
     id = Column(Integer, primary_key=True)
     index = Column(Integer)
@@ -21,7 +21,7 @@ class MLoot(base):
     attributes = Column(ARRAY(JSON))
 
 
-mloot_index = Index('mloot_index', MLoot.index)
+mcode_index = Index('mcode_index', MCode.index)
 
 
 class Db:
@@ -36,8 +36,8 @@ class Db:
         # index only need to create once...
         # log_index.create(bind=db_engine)
 
-    def add_mloot(self, data: dict):
-        self.add_model('MLoot', data)
+    def add_mcode(self, data: dict):
+        self.add_model('MCode', data)
 
     def add_model(self, model: str, data: dict):
         m = eval(model)(**data)

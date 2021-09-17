@@ -5,7 +5,7 @@ conn = Db()
 
 def generate_mnemonic():
     m = Mnemonic('english')
-    idx = 1
+    idx = 0
     all_words = set()
     while idx <= 10000:
         words = m.generate()
@@ -22,12 +22,12 @@ def generate_mnemonic():
 
         nft = {
             'index': idx,
-            'name': f'MLoot #{idx}',
-            'description': f'MLoot #{idx}',
+            'name': f'MCode #{idx}',
+            'description': f'MCode #{idx}',
             'word_list': word_list,
             'attributes': attributes
         }
-        conn.add_mloot(nft)
+        conn.add_mcode(nft)
         idx += 1
 
 
